@@ -30,7 +30,5 @@ deb-src http://nginx.org/packages/ubuntu/ $codename nginx
 EOF
 fi
 
-
-
-# apt-get update
-# apt-get install nginx
+apt-get update
+apt-get install nginx

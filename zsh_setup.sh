@@ -1,9 +1,9 @@
 #!/bin/bash
-sudo apt-get install zsh
+apt-get install zsh
 curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
 sed -i "s/plugins=(git)/plugins=(git ruby rake bundler)/g" ~/.zshrc
 # Change your default shell
-sudo chsh -s /bin/zsh
+chsh -s /bin/zsh
 
 # If you want to uninstall oh-my-zsh, just run: 
 # uninstall_oh_my_zsh

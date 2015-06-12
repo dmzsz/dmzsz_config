@@ -12,16 +12,15 @@ git clone https://github.com/exvim/main $exvim_home
 cd $exvim_home
 sh unix/install.sh
 
-if [ ! -e /etc/vim/vimrc ]; then
-  touch /etc//vim/vimrc
-  chown -R gen:gen /etc/vim/vimrc
+if [ ! -e ~/vimrc ]; then
+  touch ~/vimrc
+  chown -R gen:gen ~/vimrc
   # rm ~/.vimrc
   # touch ~/.vimrc
   # chown -R gen:gen ~/.vimr
 fi
 
-sudo cat >> /etc/vim/vimrc << EOF
-
+sudo cat >> ~/vimrc << EOF
 let g:exvim_custom_path='$exvim_home/'
 source $exvim_home/.vimrc
 EOF

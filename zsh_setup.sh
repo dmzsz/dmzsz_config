@@ -1,5 +1,5 @@
 #!/bin/bash
-apt-get install zsh
+sudo apt-get install zsh
 curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
 sed -i "s/plugins=(git)/plugins=(git ruby rake bundler)/g" ~/.zshrc
 # Change your default shell

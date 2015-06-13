@@ -1,45 +1,37 @@
 # #!/bin/bash
+sudo apt-get install vim
 exvim_home=/opt/exvim
 
 if [ ! -d $exvim_home ]; then
-  mkdir $exvim_home
+  sudo mkdir $exvim_home
 else
-  rm -rf $exvim_home
-  mkdir  $exvim_home
+  sudo rm -rf $exvim_home
+  sudo mkdir  $exvim_home
 fi
 
-git clone https://github.com/exvim/main $exvim_home
+sudo git clone https://github.com/exvim/main $exvim_home
 cd $exvim_home
-sh unix/install.sh
+sudo sh unix/install.sh
 
-if [ ! -e ~/.vimrc ]; then
-  touch ~/.vimrc
-  chown -R gen:gen ~/.vimrc
-  rm /etc/vim/.vimrc
-  touch ~/.vimrc
-  chown -R gen:gen ~/.vimrc
-fi
-
-grep -i "let g:exvim_custom_path=" /etc/vim/vimrc
+# if [ ! -f ~/.vimrc ]; then
+#   touch ~/.vimrc
+# fi
+vimrc_url=/usr/share/vim/vimrc
+grep -i "let g:exvim_custom_path=" $vimrc_url
 reval=$?
 if [ $reval -eq 1 ];then
-  cat >> /etc/vim/vimrc << EOF
-
+  echo "
 let g:exvim_custom_path='$exvim_home/'
-source $exvim_home/.vimrc
-EOF
+source $exvim_home/.vimrc" | sudo tee -a $vimrc_url
 else
   # 删除行
-  sed -i '/^let g:exvim_custom_path=.*/d' /etc/vim/vimrc
-  sed -i '/^source .*\/\.vimrc.*/d' /etc/vim/vimrc
-  cat << EOF >> /etc/vim/vimrc
-let g:exvim_custom_path='$exvim_home/'
-source $exvim_home/.vimrc
-EOF
+  sudo sed -i '/^let g:exvim_custom_path=.*/d' $vimrc_url
+  sudo sed -i '/^source .*\/\.vimrc.*/d' $vimrc_url
+  echo "let g:exvim_custom_path='$exvim_home/'
+source $exvim_home/.vimrc"| sudo tee -a $vimrc_url
 fi
 
-
-apt-get install ctags
+sudo apt-get install ctags
 
 # cat >> /etc/vim/vimrc << EOF
 # let g:exvim_custom_path='/opt/exvim/'

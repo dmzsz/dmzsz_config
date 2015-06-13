@@ -1,5 +1,7 @@
-#!/bin/bash
-rvm implode
+# ! /usr/bin/sh 
+# rvm implode
+
+sudo apt-get install -y build-essential openssl curl libcurl3-dev libreadline6 libreadline6-dev  zlib1g zlib1g-dev libssl-dev libyaml-dev libxml2-dev libxslt-dev autoconf automake libtool imagemagick libmagickwand-dev libpcre3-dev libsqlite3-dev 
 
 git clone git://github.com/sstephenson/rbenv.git ~/.rbenv
 # 用来编译安装 ruby
@@ -13,43 +15,64 @@ git clone https://github.com/rkh/rbenv-update.git ~/.rbenv/plugins/rbenv-update
 
 # Unubtu请放到 ~/.bashrc 里, zsh用户是 ~/.zshrc
 if [ $SHELL = "/bin/zsh" ]; then
-  cat > ~/.zsh << EOF
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
-  EOF
-else if [ $SHELL = "/bin/bash" ]; then
-  cat > ~/.bashrc << EOF
-export PATH="$HOME/.rbenv/bin:$PATH"
-eval "$(rbenv init -)"
-  EOF
+  grep -i "export PATH=\"\$HOME/.rbenv/.*" ~/.zsh
+  if [ $? -eq 1 ]; then
+    cat << EOF >> ~/.zsh
+
+export PATH="\$HOME/.rbenv/bin:\$PATH"
+eval "\$(rbenv init -)"
+EOF
+  fi
+elif [ $SHELL = "/bin/bash" ]; then
+  grep -i "export PATH=\"\$HOME/.rbenv/.*" ~/.bashrc
+  if [ $? -eq 1 ]; then
+    cat << EOF >> ~/.bashrc
+
+export PATH="\$HOME/.rbenv/bin:\$PATH"
+eval "\$(rbenv init -)"
+EOF
+ fi
 fi
+
+export PATH="$HOME/.rbenv/bin:$PATH"
+eval "$(rbenv init -)"
 
 # 安装ruby
 rbenv install --list
 echo "输入需要安装的版本:"
 read ruby_version
-rbenv install $ruby_version
+rbenv install 2.2.2
+rbenv rehash
 
-gem install rails
+grep -i "gem: --no-ri --no-rdoc" ~/.gemrc
+reval=$?
+if [ $reval -eq 1 -o $reval -eq 2 ]; then
+  echo "\ngem: --no-ri --no-rdoc" >> ~/.gemrc
+fi
+
+gem install bundler rails 
 gem sources -l
 gem sources -r https://rubygems.org/
 gem sources -a https://ruby.taobao.org/
 gem sources -u
 gem sources -l
 
-grep -i "gem: --no-ri --no-rdoc" .gemrc
-reval=$?
-if [ $reval -eq 1 ];then
-  echo "\ngem: --no-ri --no-rdoc" >> .gemrc
-fi
-
-
 # 默认系统使用 $ruby_version
 rbenv global $ruby_version      
 # 当前的 shell 使用 $ruby_version, 会设置一个 `RBENV_VERSION` 环境变量
-# rbenv shell $ruby_version
+rbenv shell $ruby_version
 # 当前目录使用 $ruby_version, 会生成一个 `.rbenv-version` 文件 
-# rbenv local $ruby_version
+rbenv local $ruby_version
+
+ruby -v
+rbenv which ruby
+rails -v
+rbenv which rails
+gem -v
+rbenv which gem
+bundler -v
+rbenv which bundler
+
 
 # 每当切换 ruby 版本和执行 bundle install 之后必须执行这个命令.
 # rbenv-gem-rehash安装后,无需手动输入 rbenv rehash
@@ -75,5 +98,3 @@ rbenv global $ruby_version
 # CONFIGURE_OPTS="--disable-install-doc --with-readline-dir=$(brew --prefix readline)" rbenv install 1.9.3-p392
 
 # 有关 ruby-2.0.0-p0 在 OS X 10.7+ 上的问题，参见：https://github.com/sstephenson/ruby-build/wiki
-
-

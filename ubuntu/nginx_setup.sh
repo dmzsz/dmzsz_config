@@ -15,16 +15,19 @@ source_url=/etc/apt/sources.list
 grep -i "deb .*nginx.*" $source_url
 reval=$?
 if [ $reval -eq 1 ];then
-  echo "
+  cat << 'EOF' | sudo tee -a $source_url
 # nginx
 deb http://nginx.org/packages/ubuntu/ $codename nginx
-deb-src http://nginx.org/packages/ubuntu/ $codename nginx" | sudo tee -a $source_url
+deb-src http://nginx.org/packages/ubuntu/ $codename nginx
+EOF
 else
   # 删除行
   sudo sed -i '/^deb .*nginx.*/d' $source_url
   sudo sed -i '/^deb-src .*nginx.*/d' $source_url
-  echo "deb http://nginx.org/packages/ubuntu/ $codename nginx
-deb-src http://nginx.org/packages/ubuntu/ $codename nginx" | sudo tee -a $source_url
+  cat << 'EOF' | sudo tee -a $source_url
+deb http://nginx.org/packages/ubuntu/ $codename nginx
+deb-src http://nginx.org/packages/ubuntu/ $codename nginx
+EOF
 fi
 
 sudo apt-get update

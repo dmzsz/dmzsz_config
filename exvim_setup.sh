@@ -20,15 +20,18 @@ vimrc_url=/usr/share/vim/vimrc
 grep -i "let g:exvim_custom_path=" $vimrc_url
 reval=$?
 if [ $reval -eq 1 ];then
-  echo "
+  cat << 'EOF' | sudo tee -a $vimrc_url
 let g:exvim_custom_path='$exvim_home/'
-source $exvim_home/.vimrc" | sudo tee -a $vimrc_url
+source $exvim_home/.vimrc
+EOF
 else
   # 删除行
   sudo sed -i '/^let g:exvim_custom_path=.*/d' $vimrc_url
   sudo sed -i '/^source .*\/\.vimrc.*/d' $vimrc_url
-  echo "let g:exvim_custom_path='$exvim_home/'
-source $exvim_home/.vimrc"| sudo tee -a $vimrc_url
+  cat << 'EOF' | sudo tee -a $vimrc_url
+let g:exvim_custom_path='$exvim_home/'
+source $exvim_home/.vimrc
+EOF
 fi
 
 sudo apt-get install ctags

@@ -1,7 +1,6 @@
-# ! /usr/bin/sh 
+#!/bin/sh
 # rvm implode
-
-sudo apt-get install -y build-essential openssl curl libcurl3-dev libreadline6 libreadline6-dev  zlib1g zlib1g-dev libssl-dev libyaml-dev libxml2-dev libxslt-dev autoconf automake libtool imagemagick libmagickwand-dev libpcre3-dev libsqlite3-dev 
+sudo apt-get install -y build-essential openssl curl libcurl3-dev libreadline6 libreadline6-dev  zlib1g zlib1g-dev libssl-dev libyaml-dev libxml2-dev libxslt-dev autoconf automake libtool imagemagick libmagickwand-dev libpcre3-dev libsqlite3-dev
 
 git clone git://github.com/sstephenson/rbenv.git ~/.rbenv
 # 用来编译安装 ruby
@@ -15,7 +14,7 @@ git clone https://github.com/rkh/rbenv-update.git ~/.rbenv/plugins/rbenv-update
 
 # Unubtu请放到 ~/.bashrc 里, zsh用户是 ~/.zshrc
 if [ $SHELL = "/bin/zsh" ]; then
-  grep -i "export PATH=\"\$HOME/.rbenv/.*" ~/.zsh
+  grep -i "export PATH=\"\$HOME/.rbenv/.*" ~/.zshrc
   if [ $? -eq 1 ]; then
     cat << EOF >> ~/.zsh
 
@@ -50,7 +49,11 @@ if [ $reval -eq 1 -o $reval -eq 2 ]; then
   echo "\ngem: --no-ri --no-rdoc" >> ~/.gemrc
 fi
 
-gem install bundler rails 
+gem install bundler rails
+
+# mysql 安装依赖
+sudo apt-get install libmysqlclient-dev
+
 gem sources -l
 gem sources -r https://rubygems.org/
 gem sources -a https://ruby.taobao.org/

@@ -3,6 +3,7 @@ key_file=/tmp/nginx_signing.key
 if [ ! -f $key_file ]; then
   echo "$key_file no exits, begin download";
   wget --user=gen http://nginx.org/keys/nginx_signing.key -O $key_file
+  # curl http://nginx.org/keys/nginx_signing.key | sudo apt-key add -
 else
   echo "$key_file exits"
 fi
